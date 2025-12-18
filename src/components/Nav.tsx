@@ -1,15 +1,17 @@
-import { useNavigate, useLocation } from "react-router-dom";
-function Nav() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    if (location.pathname === "/") return (<></>)
+import { useLocation, useNavigate } from "react-router-dom";
+import Button from "./Button";
+import "./Nav.scss";
+import ThemeSwitcher from "./ThemeSwitcher";
 
-    return (
-        <div className="nav">
-            <button className="button default small" style={{ margin: "auto", marginTop:"0.5rem" }} onClick={() => navigate("/")}>
-                Home
-            </button>
-        </div>
-    );
+export default function Nav() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  if (location.pathname === "/") return <></>;
+
+  return (
+    <nav>
+      <Button className="default small" onClick={() => navigate("/")} label="Home" style={{ width: "150px" }} />
+      <ThemeSwitcher />
+    </nav>
+  );
 }
-export default Nav;

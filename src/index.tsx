@@ -6,9 +6,9 @@ import { MemoryRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
-    // <React.StrictMode>
-        <MemoryRouter>
-            <App />
-        </MemoryRouter>
-    // </React.StrictMode>
+  // <React.StrictMode>
+  <MemoryRouter>
+    <App />
+  </MemoryRouter>
+  // </React.StrictMode>
 );
