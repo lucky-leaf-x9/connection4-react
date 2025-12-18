@@ -9,10 +9,9 @@ class PeerManager {
     private opponentMove: ((column: number) => void) | undefined;
     private onConnect: ((peerName: string) => void) | undefined;
     private onInit: ((id: string) => void) | undefined;
+    private onError: ((message: string) => void) | undefined;
 
     constructor(playerName: string, connectTo: string | undefined) {
-        console.log("created peer with");
-        console.log({ playerName, connectTo });
         this.opponentConnection = null;
         this.connectionState = "trying";
         this.playerName = playerName;
@@ -22,12 +21,11 @@ class PeerManager {
         this.peer.on("open", (id) => {
             this.connectionState = "success";
             if (this.onInit) this.onInit(id);
-            console.log(id);
 
             // Try to connect to other
             if (connectTo) {
                 const conn = this.peer.connect(connectTo);
-                console.log(`trying to connect to ${connectTo}`);
+                //console.log(`trying to connect to ${connectTo}`);
 
                 conn.on("open", () => {
                     //console.log(`connected to ${connectTo}`);
@@ -59,7 +57,7 @@ class PeerManager {
                     conn.on("open", () => {
                         if (this.opponentConnection) {
                             conn.send({
-                                type: "Rejection",
+                                type: "rejection",
                                 message: "already has peer",
                             });
                             conn.close();
@@ -79,7 +77,8 @@ class PeerManager {
                     conn.on("data", (data) => this.recieveMessage(data));
 
                     conn.on("close", () => {
-                        //console.log(conn.peer + "has disconnected");
+                        if (this.onError)
+                            this.onError("The opponent disconnected")
                         this.opponentConnection = null;
                     });
                 });
@@ -91,6 +90,7 @@ class PeerManager {
     setOpponentMoveCallback = (opponentMove: (column: number) => void) => (this.opponentMove = opponentMove);
     setOnConnectCallback = (onConnect: (peerName: string) => void) => (this.onConnect = onConnect);
     setOnInitCallback = (onInit: (id: string) => void) => (this.onInit = onInit);
+    setErrorCallback = (onError: (message: string) => void) => (this.onError = onError);
 
     recieveMessage = (message: any) => {
         switch (message.type) {
@@ -105,6 +105,10 @@ class PeerManager {
                     break;
                 }
                 this.opponentMove(message.data.column);
+                break;
+            case "rejection":
+                if (this.onError)
+                    this.onError("This game is full!")
                 break;
             default:
                 console.error(`unknown message type: ${message.type}`);
