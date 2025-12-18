@@ -6,6 +6,8 @@ import minimax from "../game/Minimax";
 import Connect4Game, { GameState } from "../game/Connect4Game";
 import Nav from "./nav";
 import { BoardType } from "../types";
+import Loading from "./Loading";
+import "./Game.scss";
 
 interface GameProps {
     vsAi: boolean;
@@ -25,11 +27,24 @@ function Game({ vsAi, connectingTo }: GameProps) {
     const [gameState, setGameState] = useState<GameState>(GameState.Active);
     const [canClick, setCanClick] = useState<boolean>(true);
     const [isAITurn, setAITurn] = useState<boolean>(false);
+    const [connecting, setConnecting] = useState<boolean>(false);
+    const [P2Pid, setP2Pid] = useState<string>("");
 
     // initiaialise game
     useEffect(() => {
-        if (!vsAi) peerManager = new PeerManager("wow", connectingTo);
+        if (!vsAi) {
+            setConnecting(true);
+            peerManager = new PeerManager("wow", connectingTo);
+            peerManager.setOnConnectCallback(onPeerConnect);
+            peerManager.setOnInitCallback(onP2PClientInit);
+            peerManager.setOpponentMoveCallback(peerMove)
+        }
         game = new Connect4Game(peerManager);
+        // make it not the players turn if they are connecting
+        if (connectingTo) {
+            game.isPlayerTurn = false;
+            setCanClick(false)
+        }
         setBoard(game.board);
     }, []);
 
@@ -84,7 +99,39 @@ function Game({ vsAi, connectingTo }: GameProps) {
         setCanClick(true);
         setAITurn(false);
     }
+    const peerMove = (column: number) => {
+        if (!game) return;
+        game.opponentMove(column)
+        // manage useStates
+        setBoard(game.board);
+        setAITurn(false);
+        setGameState(game.gameState);
+        if (game.gameState === GameState.Active) setCanClick(true);
+    } 
+    const onP2PClientInit = (id: string) => setP2Pid(id); 
+    const onPeerConnect = (peerName: string) => setConnecting(false);
+    
 
+    if (connecting) {
+        return (
+            <>
+                <Nav />
+                <div className="waiting-container">
+                    <Loading />
+                    Waiting for opponent...
+                    {P2Pid && (
+                        <button
+                            className="button grey"
+                            style={{ margin: "1rem auto" }}
+                            onClick={() => navigator.clipboard.writeText(`${window.location.href}?id=${P2Pid}`)}
+                        >
+                            Copy Link
+                        </button>
+                    )}
+                </div>
+            </>
+        );
+    }
     let statusText = "";
     switch (gameState) {
         case GameState.OpponentWin:

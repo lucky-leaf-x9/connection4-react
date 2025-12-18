@@ -6,7 +6,9 @@ class PeerManager {
     playerName: string;
     peer: Peer;
 
-    private opponentMove: ((column: number) => void | undefined) | undefined;
+    private opponentMove: ((column: number) => void) | undefined;
+    private onConnect: ((peerName: string) => void) | undefined;
+    private onInit: ((id: string) => void) | undefined;
 
     constructor(playerName: string, connectTo: string | undefined) {
         console.log("created peer with");
@@ -15,12 +17,11 @@ class PeerManager {
         this.connectionState = "trying";
         this.playerName = playerName;
         this.peer = new Peer();
-        this.opponentMove = undefined;
 
         // Listen for when a connection is established
         this.peer.on("open", (id) => {
             this.connectionState = "success";
-
+            if (this.onInit) this.onInit(id);
             console.log(id);
 
             // Try to connect to other
@@ -88,17 +89,19 @@ class PeerManager {
     }
 
     setOpponentMoveCallback = (opponentMove: (column: number) => void) => (this.opponentMove = opponentMove);
+    setOnConnectCallback = (onConnect: (peerName: string) => void) => (this.onConnect = onConnect);
+    setOnInitCallback = (onInit: (id: string) => void) => (this.onInit = onInit);
 
     recieveMessage = (message: any) => {
         switch (message.type) {
             case "connectionDetails":
                 //$("#player2").html(`${message.data.name}`);
                 console.log(`connected to ${message.data.name}`);
+                if (this.onConnect) this.onConnect(message.data.name);
                 break;
             case "move":
-                if (!this.opponentMove)
-                {
-                    console.log('ERROR: no opponent move callback defined')
+                if (!this.opponentMove) {
+                    console.log("ERROR: no opponent move callback defined");
                     break;
                 }
                 this.opponentMove(message.data.column);
@@ -121,5 +124,5 @@ class PeerManager {
         });
     }
 }
-  
+
 export default PeerManager;

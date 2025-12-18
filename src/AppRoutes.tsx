@@ -9,11 +9,9 @@ function AppRoutes() {
     const id = queryParameters.get("id") ?? undefined;
 
     useEffect(() => {
-        //  navigate("/game/ai");
-
-        // if (id) {
-        //     navigate("/game/vs");
-        // }
+        if (id) {
+            navigate("/game/vs");
+        }
     }, []);
 
     return (

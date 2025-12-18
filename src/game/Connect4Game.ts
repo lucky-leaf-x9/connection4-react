@@ -34,9 +34,9 @@ class Connect4Game {
         this.isPlayerTurn = true;
         if (peerManager) {
             this.peerManager = peerManager;
-            this.peerManager.setOpponentMoveCallback(this.opponentMove);
         }
         this.gameState = GameState.Active;
+        console.log('init game')
     }
 
     playerMove(column: number) {
