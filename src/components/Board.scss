@@ -1,15 +1,16 @@
 .connect4 {
     display: inline-block;
-    margin: 20px;
+    margin: 1.5rem 0;
+    width: 100%;
 }
-
-
 
 .board {
     display: flex;
     background-color: var(--bg-dark);
     padding: 5px;
     border-radius: 10px;
+    width: fit-content;
+    margin: auto;
 }
 
 .column {
@@ -40,27 +41,44 @@
     background-color: var(--bg);
     border-radius: 50%;
     position: relative;
+
+
+    .piece {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+
+
+        width: 85%;
+        height: 85%;
+        border-radius: 50%;
+
+        animation: pulse 0.3s ease-in;
+
+        &.player {
+            background-color: #2e9f68;
+        }
+
+        &.opp {
+            background-color: #9d35cd;
+        }
+    }
 }
 
-.piece {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
-
-
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-
-    animation: pulse 0.3s ease-in;
-
-    &.player {
-        background-color: #2e9f68;
+@media only screen and (max-width: 600px) {
+    .connect4 {
+        display: inline-block;
     }
 
-    &.opp {
-        background-color: #9d35cd;
+    .column {
+        margin: 0 2px;
+    }
+
+    .slot {
+        width: 30px;
+        height: 30px;
+        margin: 2px;
     }
 }
 
@@ -68,12 +86,15 @@
     0% {
         scale: 0;
     }
+
     50% {
         scale: 1;
     }
+
     75% {
         scale: 0.9;
     }
+
     100% {
         scale: 1;
     }
