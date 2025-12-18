@@ -21,18 +21,20 @@ function Home() {
     }
 
     return (
-        <div id="title-card">
-            <div style={{ margin: "1rem", fontSize: "1.2rem" }}>Your Name:</div>
-            <input value={name} type="text" placeholder="Enter your name" style={{ display: "block", margin: "auto" }} onChange={manageNameInput} />
-            <div id="connect-buttons" className={name ? "" : "disabled"}>
-                <button className="button green" disabled={isEmpty(name)} onClick={() => navigate("/game/vs")}>
-                    Play with a friend
-                </button>
-                <button className="button green" disabled={isEmpty(name)} onClick={() => navigate("/game/ai")}>
-                    Play against AI
-                </button>
+        <>
+            <div id="title-card">
+                <div style={{ margin: "1rem", fontSize: "1.2rem", fontWeight: "600" }}>Your Name:</div>
+                <input value={name} type="text" placeholder="Enter your name" style={{ display: "block", margin: "auto" }} onChange={manageNameInput} />
+                <div id="connect-buttons" className={name ? "" : "disabled"}>
+                    <button className="button default" disabled={isEmpty(name)} onClick={() => navigate("/game/vs")}>
+                        Play with a friend
+                    </button>
+                    <button className="button default" disabled={isEmpty(name)} onClick={() => navigate("/game/ai")}>
+                        Play against AI
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

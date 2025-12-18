@@ -4,7 +4,6 @@ import { Constants } from "../constants";
 import PeerManager from "../game/PeerManager";
 import minimax from "../game/Minimax";
 import Connect4Game, { GameState } from "../game/Connect4Game";
-import Nav from "./nav";
 import { BoardType } from "../types";
 import Loading from "./Loading";
 import "./Game.scss";
@@ -131,7 +130,6 @@ function Game({ vsAi, connectingTo }: GameProps) {
     if (errorMessage) {
         return (
             <>
-                <Nav />
                 <div className="error-container">
                     <div className="error-icon">⚠</div>
                     {errorMessage}
@@ -142,7 +140,6 @@ function Game({ vsAi, connectingTo }: GameProps) {
     if (connecting) {
         return (
             <>
-                <Nav />
                 <div className="waiting-container">
                     <Loading />
                     {connectingTo ? (
@@ -181,7 +178,6 @@ function Game({ vsAi, connectingTo }: GameProps) {
     }
     return (
         <>
-            <Nav />
             <div className="connect4">
                 <div className="player-turns">
                     <div className={!isOpponentTurn ? "selected" : ""}>{playerNames.player1}</div>
