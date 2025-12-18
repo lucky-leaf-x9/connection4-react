@@ -25,7 +25,7 @@ function AppRoutes() {
         <Route path="/game/vs" element={<Game vsAi={false} connectingTo={id} />} />
       </Routes>
       <a
-        href="https://github.com/alexbarker234/connect4-react"
+        href="https://github.com/lucky-leaf-x9/connection4-react"
         target="_blank"
         rel="noreferrer"
         className="github-icon"
