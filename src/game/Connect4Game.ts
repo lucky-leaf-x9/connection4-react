@@ -1,4 +1,5 @@
 import { Constants } from "../constants";
+import { BoardType } from "../types";
 import PeerManager from "./PeerManager";
 
 export const BOARD_WIDTH = 7;
@@ -23,13 +24,13 @@ class Connect4Game {
             "O"
         ]
     */
-    board: string[];
+    board: BoardType;
     isPlayerTurn: boolean;
     peerManager: PeerManager | undefined;
     gameState: GameState;
 
     constructor(peerManager: PeerManager | undefined) {
-        this.board = Array(BOARD_WIDTH).fill("");
+        this.board = ['','','','','','',''];
         this.isPlayerTurn = true;
         if (peerManager) {
             this.peerManager = peerManager;

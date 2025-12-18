@@ -59,6 +59,7 @@ input {
     }
     &:hover {
         filter: brightness(80%);
+        scale: 1.04;
     }
     &:active {
         scale: 1.04;
@@ -69,5 +70,9 @@ input {
     }
     &.grey {
         background-color: #777980;
+    }
+    &.small {
+        padding: 0.5rem;
+        font-size: 1rem;
     }
 }

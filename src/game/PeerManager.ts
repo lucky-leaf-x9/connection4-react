@@ -8,7 +8,7 @@ class PeerManager {
 
     private opponentMove: ((column: number) => void | undefined) | undefined;
 
-    constructor(playerName: string, connectTo: string | null) {
+    constructor(playerName: string, connectTo: string | undefined) {
         console.log("created peer with");
         console.log({ playerName, connectTo });
         this.opponentConnection = null;

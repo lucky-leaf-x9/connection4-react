@@ -1,20 +1,9 @@
 import "./Board.scss";
 import { Constants } from "../constants";
+import { BoardType } from "../types";
 
 interface BoardProps {
-    /* represents the board as an array of strings of each move such as:
-    [
-        'XXXO',
-        'XO',
-        'XO',
-        'O',
-        '',
-        'XOO',
-        ''
-    ]
-    (hope i counted the moves correctly lmao)
-    */
-    board: string[];
+    board: BoardType;
     canClick: boolean;
     handlePlayerMove: (column: number) => void;
 }

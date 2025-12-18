@@ -6,18 +6,21 @@ import { useEffect } from "react";
 function AppRoutes() {
     const navigate = useNavigate();
     const queryParameters = new URLSearchParams(window.location.search);
-    const id = queryParameters.get("id");
+    const id = queryParameters.get("id") ?? undefined;
 
     useEffect(() => {
-        //if (id) {
-            navigate("/game");
-        //}
+        //  navigate("/game/ai");
+
+        // if (id) {
+        //     navigate("/game/vs");
+        // }
     }, []);
 
     return (
         <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/game" element={<Game vsAi={true} connectingTo={id} />} />
+            <Route path="/game/ai" element={<Game vsAi={true} />} />
+            <Route path="/game/vs" element={<Game vsAi={false} connectingTo={id} />} />
         </Routes>
     );
 }

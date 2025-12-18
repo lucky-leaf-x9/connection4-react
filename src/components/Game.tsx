@@ -4,10 +4,12 @@ import { Constants } from "../constants";
 import PeerManager from "../game/PeerManager";
 import minimax from "../game/Minimax";
 import Connect4Game, { GameState } from "../game/Connect4Game";
+import Nav from "./nav";
+import { BoardType } from "../types";
 
 interface GameProps {
     vsAi: boolean;
-    connectingTo: string | null;
+    connectingTo?: string;
 }
 
 /**
@@ -19,7 +21,7 @@ let game: Connect4Game | undefined;
 let peerManager: PeerManager | undefined;
 
 function Game({ vsAi, connectingTo }: GameProps) {
-    const [board, setBoard] = useState<string[]>([]);
+    const [board, setBoard] = useState<BoardType>(["", "", "", "", "", "", ""]);
     const [gameState, setGameState] = useState<GameState>(GameState.Active);
     const [canClick, setCanClick] = useState<boolean>(true);
     const [isAITurn, setAITurn] = useState<boolean>(false);
@@ -98,17 +100,20 @@ function Game({ vsAi, connectingTo }: GameProps) {
             break;
     }
     return (
-        <div className="connect4">
-            <div className="player-turns">
-                <div id="player1">Player 1</div>
-                <div id="player2">Player 2</div>
+        <>
+            <Nav />
+            <div className="connect4">
+                <div className="player-turns">
+                    <div id="player1">Player 1</div>
+                    <div id="player2">Player 2</div>
+                </div>
+                {game ? <Board board={board} canClick={canClick} handlePlayerMove={handlePlayerMove} /> : ""}
+                <div id="game-status">{statusText}</div>
+                <button className="button green" style={{ display: `${gameState === GameState.Active ? "none" : ""}`, margin: "auto" }} onClick={handleRestart}>
+                    Restart?
+                </button>
             </div>
-            {game ? <Board board={board} canClick={canClick} handlePlayerMove={handlePlayerMove} /> : ""}
-            <div id="game-status">{statusText}</div>
-            <button className="button green" style={{ display: `${gameState === GameState.Active ? "none" : ""}`, margin:"auto" }} onClick={handleRestart}>
-                Restart?
-            </button>
-        </div>
+        </>
     );
 }
 
