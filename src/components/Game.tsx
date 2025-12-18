@@ -14,7 +14,6 @@ interface GameProps {
     connectingTo?: string;
 }
 
-
 function Game({ vsAi, connectingTo }: GameProps) {
     // mama mia thats a lot of useStates
     const [board, setBoard] = useState<BoardType>(["", "", "", "", "", "", ""]);
@@ -27,8 +26,8 @@ function Game({ vsAi, connectingTo }: GameProps) {
     const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
     // refs for preserving value between renders
-    const gameRef = useRef<Connect4Game | undefined>(undefined) 
-    const p2pRef = useRef<PeerManager | undefined>(undefined) 
+    const gameRef = useRef<Connect4Game | undefined>(undefined);
+    const p2pRef = useRef<PeerManager | undefined>(undefined);
 
     // initiaialise game
     useEffect(() => {
@@ -41,7 +40,10 @@ function Game({ vsAi, connectingTo }: GameProps) {
             p2pRef.current.setOpponentMoveCallback(peerMove);
             p2pRef.current.setErrorCallback(onP2PError);
 
-            window.history.replaceState(null, "", "/"); // remove id tag without refresh
+            // remove ID tag without refresh
+            const url = new URL(window.location.href);
+            url.search = "";
+            window.history.replaceState(null, "", url.toString());
         }
 
         gameRef.current = new Connect4Game(p2pRef.current);

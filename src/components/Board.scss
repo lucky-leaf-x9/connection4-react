@@ -57,11 +57,11 @@
         animation: pulse 0.3s ease-in;
 
         &.player {
-            background-color: #2e9f68;
+            background-color: var(--blue);
         }
 
         &.opp {
-            background-color: #9d35cd;
+            background-color: var(--red);
         }
     }
 }
