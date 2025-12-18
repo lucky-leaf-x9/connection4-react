@@ -5,17 +5,22 @@ export default function Button({
   onClick,
   disabled,
   label,
-  style
+  style,
+  icon
 }: {
   className: string;
   onClick: () => void;
   disabled?: boolean;
   label: string;
   style?: React.CSSProperties;
+  icon?: React.ReactNode;
 }) {
   return (
     <button className={`button ${className}`} disabled={disabled} onClick={onClick} style={style}>
-      <span className="front">{label} </span>
+      <span className="front">
+        {icon && <span style={{ marginRight: "0.5rem" }}>{icon}</span>}
+        {label}
+      </span>
     </button>
   );
 }

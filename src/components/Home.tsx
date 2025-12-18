@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
+import { FaRobot, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Background from "./Background";
 import Button from "./Button";
@@ -30,7 +31,7 @@ function Home() {
           value={name}
           type="text"
           placeholder="Enter your name"
-          style={{ display: "block", margin: "auto" }}
+          style={{ display: "block", margin: "auto", textAlign: "center" }}
           onChange={manageNameInput}
         />
         <div id="connect-buttons" className={name ? "" : "disabled"}>
@@ -38,13 +39,27 @@ function Home() {
             className="default"
             disabled={isEmpty(name)}
             onClick={() => navigate("/game/vs")}
-            label="Play with a friend"
+            label=""
+            icon={
+              <>
+                <FaUser size={40} />
+                <span style={{ margin: "0 0.5rem" }}>vs</span>
+                <FaUser size={40} />
+              </>
+            }
           />
           <Button
             className="default"
             disabled={isEmpty(name)}
             onClick={() => navigate("/game/ai")}
-            label="Play against AI"
+            label=""
+            icon={
+              <>
+                <FaUser size={40} />
+                <span style={{ margin: "0 0.5rem" }}>vs</span>
+                <FaRobot size={40} />
+              </>
+            }
           />
         </div>
       </div>

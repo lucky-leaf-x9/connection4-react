@@ -26,7 +26,11 @@
     background: var(--extra);
     color: white;
     transform: translateY(-6px);
-    transition: transform 0.1s;
+    transition: transform 0.1s, background 0.2s;
+  }
+
+  &:hover:not(:disabled) .front {
+    background: var(--extra-dark);
   }
 
   &:active .front {
