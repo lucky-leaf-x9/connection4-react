@@ -96,7 +96,7 @@ class PeerManager {
         switch (message.type) {
             case "connectionDetails":
                 //$("#player2").html(`${message.data.name}`);
-                console.log(`connected to ${message.data.name}`);
+                //console.log(`connected to ${message.data.name}`);
                 if (this.onConnect) this.onConnect(message.data.name);
                 break;
             case "move":

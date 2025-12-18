@@ -23,27 +23,33 @@ let game: Connect4Game | undefined;
 let peerManager: PeerManager | undefined;
 
 function Game({ vsAi, connectingTo }: GameProps) {
+    // mama mia thats a lot of useStates
     const [board, setBoard] = useState<BoardType>(["", "", "", "", "", "", ""]);
     const [gameState, setGameState] = useState<GameState>(GameState.Active);
     const [canClick, setCanClick] = useState<boolean>(true);
-    const [isAITurn, setAITurn] = useState<boolean>(false);
+    const [isOpponentTurn, setOpponentTurn] = useState<boolean>(false);
     const [connecting, setConnecting] = useState<boolean>(false);
     const [P2Pid, setP2Pid] = useState<string>("");
+    const [playerNames, setPlayerNames] = useState({player1: localStorage.getItem("name") ?? "Player 1", player2: "Player 2"})
 
     // initiaialise game
     useEffect(() => {
+        // initialise peer
         if (!vsAi) {
             setConnecting(true);
-            peerManager = new PeerManager("wow", connectingTo);
+            peerManager = new PeerManager(playerNames.player1, connectingTo);
             peerManager.setOnConnectCallback(onPeerConnect);
             peerManager.setOnInitCallback(onP2PClientInit);
-            peerManager.setOpponentMoveCallback(peerMove)
+            peerManager.setOpponentMoveCallback(peerMove);
+
+            window.history.replaceState(null, "", "/"); // remove id tag without refresh
         }
+
         game = new Connect4Game(peerManager);
         // make it not the players turn if they are connecting
         if (connectingTo) {
             game.isPlayerTurn = false;
-            setCanClick(false)
+            setCanClick(false);
         }
         setBoard(game.board);
     }, []);
@@ -51,16 +57,16 @@ function Game({ vsAi, connectingTo }: GameProps) {
     // Get the AI to play 1 second after
     useEffect(() => {
         if (!game) {
-            console.log("GAME UNINITIALISED");
+            console.error("GAME UNINITIALISED");
             return;
         }
-        if (vsAi && isAITurn && game.gameState === GameState.Active) {
+        if (vsAi && isOpponentTurn && game.gameState === GameState.Active) {
             // calculate next move and execute it after 1s has passed
             const start = new Date();
             const aiColumn = minimax(game.board, 4, true, Constants.OPPONENT_SYMBOL)[0];
 
             if (aiColumn === null) {
-                console.log("ERROR OCCURED");
+                console.error("ERROR OCCURED");
                 return;
             }
             const end = new Date();
@@ -72,16 +78,16 @@ function Game({ vsAi, connectingTo }: GameProps) {
                 game.opponentMove(aiColumn);
                 // manage useStates
                 setBoard(game.board);
-                setAITurn(false);
+                setOpponentTurn(false);
                 setGameState(game.gameState);
                 if (game.gameState === GameState.Active) setCanClick(true);
             }, delay);
         }
-    }, [isAITurn]);
+    }, [isOpponentTurn]);
 
     function handlePlayerMove(column: number) {
         if (!game) {
-            console.log("GAME UNINITIALISED");
+            console.error("GAME UNINITIALISED");
             return;
         }
         game.playerMove(column);
@@ -89,7 +95,7 @@ function Game({ vsAi, connectingTo }: GameProps) {
         setBoard(game.board);
         setGameState(game.gameState);
         setCanClick(false);
-        setAITurn(true);
+        setOpponentTurn(true);
     }
 
     function handleRestart() {
@@ -97,36 +103,43 @@ function Game({ vsAi, connectingTo }: GameProps) {
         setBoard(game.board);
         setGameState(game.gameState);
         setCanClick(true);
-        setAITurn(false);
+        setOpponentTurn(false);
     }
     const peerMove = (column: number) => {
         if (!game) return;
-        game.opponentMove(column)
+        game.opponentMove(column);
         // manage useStates
         setBoard(game.board);
-        setAITurn(false);
+        setOpponentTurn(false);
         setGameState(game.gameState);
         if (game.gameState === GameState.Active) setCanClick(true);
-    } 
-    const onP2PClientInit = (id: string) => setP2Pid(id); 
-    const onPeerConnect = (peerName: string) => setConnecting(false);
-    
-
+    };
+    const onP2PClientInit = (id: string) => setP2Pid(id);
+    const onPeerConnect = (peerName: string) => {
+        setConnecting(false);
+        setPlayerNames({...playerNames, player2: peerName})
+    }
     if (connecting) {
         return (
             <>
                 <Nav />
                 <div className="waiting-container">
                     <Loading />
-                    Waiting for opponent...
-                    {P2Pid && (
-                        <button
-                            className="button grey"
-                            style={{ margin: "1rem auto" }}
-                            onClick={() => navigator.clipboard.writeText(`${window.location.href}?id=${P2Pid}`)}
-                        >
-                            Copy Link
-                        </button>
+                    {connectingTo ? (
+                        "Connecting..."
+                    ) : (
+                        <>
+                            Waiting for opponent...
+                            {P2Pid && (
+                                <button
+                                    className="button grey"
+                                    style={{ margin: "1rem auto" }}
+                                    onClick={() => navigator.clipboard.writeText(`${window.location.href}?id=${P2Pid}`)}
+                                >
+                                    Copy Link
+                                </button>
+                            )}
+                        </>
                     )}
                 </div>
             </>
@@ -151,8 +164,8 @@ function Game({ vsAi, connectingTo }: GameProps) {
             <Nav />
             <div className="connect4">
                 <div className="player-turns">
-                    <div id="player1">Player 1</div>
-                    <div id="player2">Player 2</div>
+                    <div className={!isOpponentTurn ? "selected" : ""}>{playerNames.player1}</div>
+                    <div className={isOpponentTurn ? "selected" : ""}>{playerNames.player2}</div>
                 </div>
                 {game ? <Board board={board} canClick={canClick} handlePlayerMove={handlePlayerMove} /> : ""}
                 <div id="game-status">{statusText}</div>

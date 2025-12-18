@@ -36,7 +36,6 @@ class Connect4Game {
             this.peerManager = peerManager;
         }
         this.gameState = GameState.Active;
-        console.log('init game')
     }
 
     playerMove(column: number) {
