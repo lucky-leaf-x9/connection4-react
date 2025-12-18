@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Board from "./Board";
-import { Constants } from "./constants";
-import PeerManager from "./game/PeerManager";
-import minimax from "./game/Minimax";
-import Connect4Game, { GameState } from "./game/Connect4Game";
+import { Constants } from "../constants";
+import PeerManager from "../game/PeerManager";
+import minimax from "../game/Minimax";
+import Connect4Game, { GameState } from "../game/Connect4Game";
 
 interface GameProps {
     vsAi: boolean;
@@ -42,7 +42,6 @@ function Game({ vsAi, connectingTo }: GameProps) {
             const start = new Date();
             const aiColumn = minimax(game.board, 4, true, Constants.OPPONENT_SYMBOL)[0];
 
-            console.log(`ai chose column ${aiColumn}`);
             if (aiColumn === null) {
                 console.log("ERROR OCCURED");
                 return;
@@ -98,7 +97,6 @@ function Game({ vsAi, connectingTo }: GameProps) {
         default:
             break;
     }
-    console.log(statusText, gameState);
     return (
         <div className="connect4">
             <div className="player-turns">

@@ -1,6 +1,6 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Home from "./Home";
-import Game from "./Game";
+import Home from "./components/Home";
+import Game from "./components/Game";
 import { useEffect } from "react";
 
 function AppRoutes() {

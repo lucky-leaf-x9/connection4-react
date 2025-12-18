@@ -1,11 +1,12 @@
 import { Constants } from "../constants";
+import Connect4Game from "./Connect4Game";
 
 const BOARD_WIDTH = 7;
 const BOARD_HEIGHT = 6;
 
 const isColumnFull = (columnString: string) => columnString.length >= 6;
-// TODO, check if someone has won - ai sometimes plays defensively even though it could win in the next turn
-const isTerminalState = (board: string[]) => board.every((col) => isColumnFull(col));
+
+const isTerminalState = (board: string[]) => board.every((col) => isColumnFull(col)) || Connect4Game.isGameOver(board);
 
 const getOppositeSymbol = (symbol: string) => (symbol === Constants.PLAYER_SYMBOL ? Constants.OPPONENT_SYMBOL : Constants.PLAYER_SYMBOL);
 

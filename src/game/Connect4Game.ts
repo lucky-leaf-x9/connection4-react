@@ -33,7 +33,7 @@ class Connect4Game {
         this.isPlayerTurn = true;
         if (peerManager) {
             this.peerManager = peerManager;
-            this.peerManager.setOpponentMoveCallback(this.opponentMove)
+            this.peerManager.setOpponentMoveCallback(this.opponentMove);
         }
         this.gameState = GameState.Active;
     }
@@ -48,22 +48,20 @@ class Connect4Game {
         if (this.peerManager) {
             this.peerManager.sendMoveData(column);
         }
-        this.setGameState();
+        this.gameState = Connect4Game.isGameOver(this.board)
     }
 
     opponentMove(column: number) {
         if (this.isPlayerTurn) {
-            console.log('opponent made move out of turn?')
+            console.log("opponent made move out of turn?");
         }
         if (this.board[column].length >= BOARD_HEIGHT) return;
 
         this.board[column] += Constants.OPPONENT_SYMBOL;
         this.isPlayerTurn = true;
-        this.setGameState();
+        this.gameState = Connect4Game.isGameOver(this.board)
     }
-
-    private setGameState() {
-        // Tests winning condition
+    static isGameOver = (board: string[]) => {
         const dirs = [
             [0, 1],
             [1, 1],
@@ -72,30 +70,27 @@ class Connect4Game {
         ];
         //printBoard(board);
         for (let i = 0; i < BOARD_WIDTH; i++) {
-            for (let j = 0; j < this.board[i].length; j++) {
-                const symb = this.board[i][j];
+            for (let j = 0; j < board[i].length; j++) {
+                const symb = board[i][j];
 
                 for (const [x, y] of dirs) {
                     let k = 1;
-                    while (i + k * x < 7 && j + k * y < this.board[i + k * x].length && j + k * y >= 0 && this.board[i + k * x][j + k * y] === symb) {
+                    while (i + k * x < 7 && j + k * y < board[i + k * x].length && j + k * y >= 0 && board[i + k * x][j + k * y] === symb) {
                         k += 1;
                         if (k === 4) {
-                            this.gameState = symb === Constants.PLAYER_SYMBOL ? GameState.PlayerWin : GameState.OpponentWin;
-                            return;
+                            return symb === Constants.PLAYER_SYMBOL ? GameState.PlayerWin : GameState.OpponentWin;
                         }
                     }
                 }
             }
         }
 
-        if (this.board.every((col) => col.length === 6)) {
-            this.gameState = GameState.Draw;
-            return;
+        if (board.every((col) => col.length === 6)) {
+            return GameState.Draw;
         }
 
-        this.gameState = GameState.Active;
-        return;
-    }
+        return GameState.Active;
+    };
 
     private printBoard(board: string[]) {
         let boardStr = "";

@@ -1,8 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import "./Home.scss";
 
-import Game from "./Game";
-
 function Home() {
     const [name, setName] = useState("");
 

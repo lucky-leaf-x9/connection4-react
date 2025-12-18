@@ -1,5 +1,5 @@
 import "./Board.scss";
-import { Constants } from "./constants";
+import { Constants } from "../constants";
 
 interface BoardProps {
     /* represents the board as an array of strings of each move such as:
