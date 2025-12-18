@@ -1,4 +1,5 @@
 import { Constants } from "../constants";
+import { BoardType } from "../types";
 import Connect4Game from "./Connect4Game";
 
 const BOARD_WIDTH = 7;
@@ -6,11 +7,11 @@ const BOARD_HEIGHT = 6;
 
 const isColumnFull = (columnString: string) => columnString.length >= 6;
 
-const isTerminalState = (board: string[]) => board.every((col) => isColumnFull(col)) || Connect4Game.isGameOver(board);
+const isTerminalState = (board: BoardType) => board.every((col) => isColumnFull(col)) || Connect4Game.isGameOver(board);
 
 const getOppositeSymbol = (symbol: string) => (symbol === Constants.PLAYER_SYMBOL ? Constants.OPPONENT_SYMBOL : Constants.PLAYER_SYMBOL);
 
-const evaluateBoard = (board: string[], symbol: string) => {
+const evaluateBoard = (board: BoardType, symbol: string) => {
     const dirs = [
         [0, 1],
         [1, 1],
@@ -46,7 +47,7 @@ const evaluateBoard = (board: string[], symbol: string) => {
     return goodValue - badValue;
 };
 
-function minimax(board: string[], depth: number, maximizingPlayer: boolean, symbol: string): [number | null, number] {
+function minimax(board: BoardType, depth: number, maximizingPlayer: boolean, symbol: string): [number | null, number] {
     if (depth === 0 || isTerminalState(board)) {
         return [null, evaluateBoard(board, symbol)];
     }
@@ -56,7 +57,7 @@ function minimax(board: string[], depth: number, maximizingPlayer: boolean, symb
         let bestCol = null;
         for (let col = 0; col < BOARD_WIDTH; col++) {
             if (!isColumnFull(board[col])) {
-                const newBoard = [...board];
+                const newBoard = [...board] as BoardType;
                 newBoard[col] += symbol;
                 const score = minimax(newBoard, depth - 1, false, symbol)[1];
                 if (score > maxScore) {
@@ -71,7 +72,7 @@ function minimax(board: string[], depth: number, maximizingPlayer: boolean, symb
         let bestCol = null;
         for (let col = 0; col < BOARD_WIDTH; col++) {
             if (!isColumnFull(board[col])) {
-                const newBoard = [...board];
+                const newBoard = [...board] as BoardType;
                 newBoard[col] += getOppositeSymbol(symbol);
                 const score = minimax(newBoard, depth - 1, true, symbol)[1];
                 if (score < minScore) {

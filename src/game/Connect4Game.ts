@@ -62,7 +62,7 @@ class Connect4Game {
         this.isPlayerTurn = true;
         this.gameState = Connect4Game.isGameOver(this.board)
     }
-    static isGameOver = (board: string[]) => {
+    static isGameOver = (board: BoardType) => {
         const dirs = [
             [0, 1],
             [1, 1],
@@ -93,7 +93,7 @@ class Connect4Game {
         return GameState.Active;
     };
 
-    private printBoard(board: string[]) {
+    private printBoard(board: BoardType) {
         let boardStr = "";
         for (let row = 5; row >= 0; row--) {
             for (let col = 0; col < 7; col++) {
