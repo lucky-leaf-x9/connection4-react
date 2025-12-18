@@ -43,8 +43,21 @@ input {
   background-color: var(--bg2);
   outline: none;
   border: none;
+  border-radius: 12px;
 
   &:focus {
     outline: var(--extra) solid 2px;
+  }
+}
+
+.github-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0.5rem;
+  transition: scale 0.2s;
+
+  &:hover {
+    scale: 1.1;
   }
 }

@@ -6,11 +6,12 @@ import ThemeSwitcher from "./ThemeSwitcher";
 export default function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
-  if (location.pathname === "/") return <></>;
 
   return (
     <nav>
-      <Button className="default small" onClick={() => navigate("/")} label="Home" style={{ width: "150px" }} />
+      {location.pathname !== "/" && (
+        <Button className="default small" onClick={() => navigate("/")} label="Home" style={{ width: "150px" }} />
+      )}
       <ThemeSwitcher />
     </nav>
   );
