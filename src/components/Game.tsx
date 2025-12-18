@@ -186,8 +186,14 @@ function Game({ vsAi, connectingTo }: GameProps) {
           <div className={isOpponentTurn ? "selected" : ""}>{playerNames.player2}</div>
         </div>
         {gameRef.current ? <Board board={board} canClick={canClick} handlePlayerMove={handlePlayerMove} /> : ""}
-        <div id="game-status">{statusText}</div>
-        {gameState !== GameState.Active && <Button className="green" label="Restart?" onClick={handleRestart} />}
+        {gameState !== GameState.Active && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <div id="game-status">{statusText}</div>
+              <Button className="green" label="Restart?" onClick={handleRestart} />
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
